@@ -141,10 +141,12 @@
   <ItemGroup>
     <ClCompile Include="linked_list.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="puzzle.c" />
     <ClCompile Include="trie.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linked_list.h" />
+    <ClInclude Include="puzzle.h" />
     <ClInclude Include="trie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
