@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 #include "puzzle.h"
 
 // Function that creates a 2D array based on user's input
@@ -10,29 +11,25 @@ char* generateMatrix(int width, int height) {
 }
 
 void populatePuzzleWithRandomCharacters(Puzzle* puzzle) {
-    for (int i = 0; i < puzzle->nbRows * puzzle->nbColumns; i++) {
-        puzzle->_2D_Array[i]) = 'A' + (rand() % 26);
-        if (i % puzzle->nbColumns == 0 && i != 0)
-            printf("\n");
-        else
-            printf(" ");
-    }
+    for (int i = 0; i < puzzle->nbRows * puzzle->nbColumns; i++)
+        puzzle->_2D_Array[i] = 'A' + (rand() % 26);
+}
 
 void populatePuzzleWithUserInput(Puzzle * puzzle) {
-    char userInputString[puzzle->nbColumns * 2];
+    char userInputString[puzzle->nbColumns];
     for (int i = 0; i < puzzle->nbRows; i++) {
+        printf("Row %d: ", i + 1);
         getchar();
         fgets(userInputString, puzzle->nbColumns, stdin);
-        userInputString[strcspn(userInputString, "\n")] = 0;
-        for (int j = 0; j < puzzle->strlen(userInputString); j += 2)
-            puzzle->_2D_Array[i] = userInputString[j];
+        for (int j = 0; j < strlen(userInputString); j ++)
+            puzzle->_2D_Array[i * puzzle->nbColumns + j] = userInputString[i * puzzle->nbColumns + j];
     }
 }
 
-void printPuzzle(Puzzle puzzle) {
-    for (int i = 0; i < puzzle.nbRows; i++) {
-        for (int j = 0; j < puzzle.nbColumns; j++)
-            printf("%c ", puzzle._2D_Array[i * puzzle.nbColumns + j]);
+void printPuzzle(Puzzle *puzzle) {
+    for (int i = 0; i < puzzle->nbRows; i++) {
+        for (int j = 0; j < puzzle->nbColumns; j++)
+            printf(" %c", puzzle->_2D_Array[i * puzzle->nbColumns + j]);
         printf("\n");
     }
 }
@@ -45,6 +42,6 @@ Puzzle* createPuzzle() {
 }
 
 // Function that destroy the matrix which stores the puzzle
-void destroyPuzzle(Puzzle * puzzle) {
+void destroyPuzzle(Puzzle* puzzle) {
     free(puzzle);
 }
