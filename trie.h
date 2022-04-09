@@ -1,30 +1,34 @@
-/*
 #ifndef _TRIE_H_
 #define _TRIE_H_
 
-#define NUM_CHARACTERS 52   // 26 * 2 because to deal with uppercase letters as well as lowercase letters
+#define NUM_CHARACTERS 26   // 26 the English alphabet has 26 letters and we are dealing only with lowercase letters
 
 typedef struct trieNode {
-    struct trieNode* child[52];
+    struct trieNode* child[26];
     int isEndOfWord;
     int isInThePuzzle;
-    char meaning[300];
 } trieNode;
 
-trieNode* load();
+trieNode* populateTrieFromDictionary();
 
-void unload_rec(trieNode* dict_rem);
+void destroyTrie (trieNode* dictionary);
 
-char* search(trieNode* root, char* key);
+char* searchWord(trieNode *root, char* key);
 
 void view();
 
 void add(trieNode* root);
 
+void addWordToTrie(trieNode* root, char *word, int wordLength);
+
+void addWordToTrieFromUserInput(trieNode* root);
+
 int haveChildren(trieNode* curr);
 
-int deletion(trieNode** curr, char* str);
+int deleteWordFromTrie(trieNode **curr, char* str);
+
+void printAllWords(trieNode* root, char* wordArray, int pos);
+
+void printWord(char* str, int n);
 
 #endif
-
-*/
