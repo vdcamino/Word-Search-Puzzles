@@ -16,7 +16,7 @@ void populatePuzzleWithRandomCharacters(Puzzle* puzzle);
 
 void populatePuzzleWithUserInput(Puzzle* puzzle);
 
-void printPuzzle(Puzzle puzzle);
+void printPuzzle(Puzzle* puzzle);
 
 // Function that creates a puzzle
 Puzzle* createPuzzle();
