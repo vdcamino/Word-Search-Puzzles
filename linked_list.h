@@ -1,10 +1,8 @@
 #ifndef _LINKED_LIST_H_
 #define _LINKED_LIST_H_
 
-#include "linked_list.h"
-
 typedef struct nodoLEnc2 {
-	char info;               // Info é apenas um outro nome para a struct Livro
+	char palavra[50];
 	struct nodoLEnc2* ant;
 	struct nodoLEnc2* prox;
 } NodoLEnc2;
@@ -24,24 +22,15 @@ void destroiLista(ListaEnc2Plus* lista);
 void imprimeLista(ListaEnc2Plus* lista);
 
 // Funcao que insere um nodo no inicio de uma lista
-int insereInicioLista(ListaEnc2Plus* lista, char info);
+void insereInicioLista(ListaEnc2Plus* lista, char* palavra);
 
 // Funcao que resgata um nodo com uma informacao de uma lista
-NodoLEnc2* buscaInfoLista(ListaEnc2Plus* lista, int matricula);
+NodoLEnc2* buscaInfoLista(ListaEnc2Plus* lista, char* palavra);
 
 // Funcao que remove um nodo com uma informacao de uma lista
-int removeInfoLista(ListaEnc2Plus* lista, int matricula);
+int removeInfoLista(ListaEnc2Plus* lista, char* palavra);
 
 // Funcao que calcula o tamanho da lista
 int tamanhoLista(ListaEnc2Plus* lista);
-
-// Funcao que adiciona um livro em uma posicao especifica da lista
-int insereEmPosicaoLista(ListaEnc2Plus* lista, char info, int posicao);
-
-// Funcao que imprime uma lista comecando pelo final
-void imprimeInversoLista(ListaEnc2Plus* lista);
-
-// Funcao que inverte uma lista duplamente encadeada
-void inverteLista(ListaEnc2Plus* lista);
 
 #endif

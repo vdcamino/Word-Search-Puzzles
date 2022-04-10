@@ -3,21 +3,24 @@
 
 #define NUM_CHARACTERS 26   // 26 the English alphabet has 26 letters and we are dealing only with lowercase letters
 
+#include "hashmap.h"
+#include <stdbool.h>
+
 typedef struct trieNode {
-    struct trieNode* child[26];
-    int isEndOfWord;
-    int isInThePuzzle;
+    char ch;
+    bool endofword;
+    hashmap *children;
 } trieNode;
+
+trieNode* inittrienode(char);
+
+void addtotrie(trieNode*, char[]);
 
 trieNode* populateTrieFromDictionary();
 
 void destroyTrie (trieNode* dictionary);
 
 char* searchWord(trieNode *root, char* key);
-
-void view();
-
-void add(trieNode* root);
 
 void addWordToTrie(trieNode* root, char *word, int wordLength);
 
