@@ -1,20 +1,25 @@
 #ifndef HASHMAP_H_
 #define HASHMAP_H_ "hashmap.h"
-typedef struct node{
+typedef struct NodeHashMap{
     char key;
     void* val;
-    struct node *next;
-} node;
+    struct NodeHashMap *next;
+} NodeHashMap;
 
-typedef struct hashmap{
+typedef struct HashMap{
     int size;
     int count;
-    node **array;
-}hashmap;
+    NodeHashMap **array;
+}HashMap;
 
-hashmap* inithashmap(int);
-void* get(hashmap*, char);
-void add(hashmap*, char, void*);
-void del(hashmap*, char);
+// Function that creates a new hash table
+HashMap* createHashMap(int size);
+
+// Function that gets the value for the given key from the hashmap
+// It returns values of any type
+void* get(HashMap *map, char key);
+
+// Function that adds a new (key, value) pair to the hash table
+void add(HashMap* map, char key, void* value);
 
 #endif

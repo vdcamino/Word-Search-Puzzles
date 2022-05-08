@@ -1,37 +1,39 @@
 #ifndef _TRIE_H_
 #define _TRIE_H_
 
-#define NUM_CHARACTERS 26   // 26 the English alphabet has 26 letters and we are dealing only with lowercase letters
-
 #include "hashmap.h"
-#include <stdbool.h>
 
-typedef struct trieNode {
-    char ch;
-    bool endofword;
-    hashmap *children;
-} trieNode;
+typedef struct NodeTrie {
+    char letter;
+    int isEndOfWord;
+    HashMap *children;
+} NodeTrie;
 
-trieNode* inittrienode(char);
+// Function that initializes a new trie node
+NodeTrie* createNodeTrie(char letter);
 
-void addtotrie(trieNode*, char[]);
+// Function that adds a given word to the trie
+void addToTrie(NodeTrie* root, char word[]);
 
-trieNode* populateTrieFromDictionary();
+// Function that populates a trie based on the words stored in the .txt file
+NodeTrie* populateTrieFromDictionary();
 
-void destroyTrie (trieNode* dictionary);
+// Function that destroys a trie
+void destroyTrie (NodeTrie* root);
 
-char* searchWord(trieNode *root, char* key);
+// Function that adds a given word to the trie based on user input and stores it in the .txt file
+void addToTrieFromUserInput(NodeTrie* root);
 
-void addWordToTrie(trieNode* root, char *word, int wordLength);
+// Helper function to print the word found
+void printWord(char* word);
 
-void addWordToTrieFromUserInput(trieNode* root);
+// Print all words in Trie
+void printAllWordsOfTrie(NodeTrie* root, char* wordArray, int index);
 
-int haveChildren(trieNode* curr);
+// Function that verifies if a node has children or not. It returns 1 if it has; 0 if it does not
+int haveChildren(NodeTrie* root);
 
-int deleteWordFromTrie(trieNode **curr, char* str);
-
-void printAllWords(trieNode* root, char* wordArray, int pos);
-
-void printWord(char* str, int n);
+// Recursive function to delete a string from the trie
+int deleteWordFromTrie(NodeTrie* root, char* word);
 
 #endif

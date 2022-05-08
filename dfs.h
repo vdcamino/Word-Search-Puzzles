@@ -4,9 +4,10 @@
 #include "puzzle.h"
 #include "linked_list.h"
 
-void dfs_lookup(trieNode* node, char** grid, int rowsize, int colsize, int row, int col, char* word, int wordindex, ListaEnc2Plus* result, int* returnsize);
+// Recursive function that performs the DFS
+void DFS(NodeTrie* node, char** grid, int rowsize, int colsize, int row, int col, char* word, int wordindex, LinkedList* result);
 
-// Driver function for dfs lookup, called from main
-void findwords(trieNode* root, Puzzle* puzzle, int* returnsize, ListaEnc2Plus* result);
+// Function that calls a DFS for each character of the puzzle and store the words found in a linked list
+void solvePuzzle(NodeTrie* root, Puzzle* puzzle, LinkedList* result);
 
 #endif

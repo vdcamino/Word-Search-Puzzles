@@ -20,7 +20,7 @@ char** createGrid(int width, int height) {
     return grid;
 }
 
-// Convert a word entered by the user to a row of the grid
+// Convert a word entered by the user into a row of the grid
 void parseInput(char **grid, int row, char *buffer){
     int col = 0;
     while(buffer[col] != '\0'){
@@ -40,8 +40,7 @@ void populatePuzzleWithRandomCharacters(Puzzle* puzzle) {
 void populatePuzzleWithUserInput(Puzzle * puzzle){
     int i, j;
     char buffer[puzzle->nbColumns];
-    int c;
-    for(i=0; i<puzzle->nbRows; i++){
+    for(i = 0; i <puzzle->nbRows; i++){
         do{
             printf("\nEnter row #%d of the grid (as a single word of length = %d):", i+1, puzzle->nbColumns);
             fflush(stdin);
@@ -62,23 +61,8 @@ void printPuzzle(Puzzle *puzzle) {
         printf("\n");
     }
 }
-/*
-// Function that prints the list of words from the .txt dictionary that were found in the grid
-void display_result(char** result, int return_size){
-    int i;
 
-    printf("\nWords from the list found in the grid:");
-
-    if(return_size == 0)
-    printf("\nNone of the given words are in the grid");
-
-    for(i=0; i<return_size; i++){
-        printf("\n%s", result[i]);
-    }
-    printf("\n");
-}
-*/
-// Function that destroy the matrix which stores the puzzle
+// Function that destroys the matrix which stores the puzzle
 void destroyPuzzle(Puzzle* puzzle) {
     free(puzzle);
 }

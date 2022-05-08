@@ -1,197 +1,133 @@
 #include<stdio.h>
 #include<string.h>
-#include<conio.h>
-#include<ctype.h>
-#include<windows.h>
 #include<stdlib.h>
-#include<time.h>
 
 #include "trie.h"
 
-// Initialize a new trie node
-trieNode* inittrienode(char ch){
-    trieNode *node = (trieNode*) malloc(sizeof(trieNode));
-    node->ch = ch;
-    node->children = inithashmap(26);
-    node->endofword = false;
+// Function that initializes a new trie node
+NodeTrie* createNodeTrie(char letter){
+    NodeTrie *node = (NodeTrie*) malloc(sizeof(NodeTrie));
+    node->letter = letter;
+    node->children = createHashMap(26); // 26 because the English alphabet has 26 letters and we are dealing only with lowercase letters
+    node->isEndOfWord = 0;
 }
 
-trieNode* populateTrieFromDictionary(){
-    // Add all words to be found into the trie
-    trieNode *root = inittrienode('*');
-    // Dictionary file
-    FILE* dict_file = fopen("10000_english_words_dataset.txt", "r+");
+// Function that adds a given word to the trie
+void addToTrie(NodeTrie* root, char word[]){
+    NodeTrie *curr = root;
+    int i = 0;
+    while (word[i] != '\0'){    // We go through all the characters of the strings we want to store in the trie
+        NodeTrie *node = (NodeTrie*)get(curr->children, word[i]);   // We verify if the current node already has a child corresponding to the current letter we want to add
+        if(node == NULL){   // If it does not exist, we add it to the trie
+            NodeTrie *newNode = createNodeTrie(word[i]);
+            add(curr->children, word[i], newNode);  // Add the new node as a child of the current node (it will then be accessible via the hash table)
+            curr = newNode;
+        } else
+            curr = node;    // If it already exists, we continue to explore this branch of the trie
+        i++;
+    }
+    curr->isEndOfWord = 1;  // Once we have finished inserting all the nodes/letters of the word in the trie, we set a flag indicating that this last node is the end of a word
+}
 
-    // Dictionary file not opened
-    if (dict_file == NULL) {
+// Function that populates a trie based on the words stored in the .txt file
+NodeTrie* populateTrieFromDictionary(){
+    NodeTrie *root = createNodeTrie('*'); // The first node of the trie can contain no matter what symbol/letter
+    FILE* dict_file = fopen("10000_english_words_dataset.txt", "r+");   // Try to open the dictionary file
+    if (dict_file == NULL)  // In case dictionary file could not be opened
         printf("Error opening dictionary");
-    }
-    // Store words from Dictionary file
-    char wordZ[50];
-    while ((fscanf(dict_file, "%s", wordZ)) != EOF) {
-        addtotrie(root, wordZ);
-    }
-    fclose(dict_file);
-    return root;
+    char word[50];  // Temporary string to retrieve words from the file and then add it to the trie
+    while ((fscanf(dict_file, "%s", word)) != EOF)  // Parse the whole dictionary
+        addToTrie(root, word);
+    fclose(dict_file);  // Close dictionary
+    return root;    // Return the trie's head node
 }
 
-void destroyTrie (trieNode* dictionary){
-    /*
-    trieNode* tmp = dictionary;
-    // Recursively freeing allocated memory
-    for (int i = 0; i < 26; i++)
-        if (tmp->children[i] != NULL)
-            destroyTrie (tmp->children[i]);
-    free (tmp);
-    tmp = NULL;
-    */
-}
-
-/*
-char* searchWord(trieNode *root, char* key){
-    trieNode *pCrawl = root;
-    for (int i = 0; key[i]!='\0'; i++){
-        int index = (int)tolower(key[i]) - 'a';
-        if (pCrawl->children[index]==NULL)
-            return NULL;
-        pCrawl = pCrawl->children[index];
+// Function that destroys a trie
+void destroyTrie (NodeTrie* root){
+    NodeTrie* tmp = root;
+    char current_char;
+    for (int i = 0; i < 26; i++){   // Recursively freeing allocated memory
+        current_char = i + 'a';
+        if (get(tmp->children, current_char) != NULL) // Verify if this node has children
+            destroyTrie (get(tmp->children, current_char));
     }
-
-    if((pCrawl->isEndOfWord==1))
-        return "IS IN THE PUZZLE";
-    else
-        return NULL;
+    free(tmp);
 }
-*/
-/*
-void addWordToTrieFromUserInput(trieNode* root){
 
-    // Aux variables
-    int wordTypeChoiceAux;
-    int wordLength;
+// Function that adds a given word to the trie based on user input and stores it in the .txt file
+void addToTrieFromUserInput(NodeTrie* root){
     char word[50];
-
     printf("Enter the word to add: ");
     scanf("%s", word);
-    wordLength = strlen(word);
-    addWordToTrie(root, word, wordLength);
+    addToTrie(root, word);
     FILE *dict_file=fopen("10000_english_words_dataset.txt","a");
     fprintf(dict_file,"\n%s ",word);
     fclose(dict_file);
 }
-*/
-
-// Add given word to the trie
-void addtotrie(trieNode* root, char word[]){
-    trieNode *curr, *child;
-    int i = 0;
-    curr = root;
-    while (word[i] != '\0'){
-        trieNode *node = (trieNode*)get(curr->children, word[i]);
-
-        if(node == NULL){
-            trieNode *newnode = inittrienode(word[i]);
-            add(curr->children, word[i], newnode);
-            curr = newnode;
-        }
-        else{
-            curr = node;
-        }
-        i++;
-    }
-    curr->endofword = true;
-}
-
-/*
-// Returns 1 if given node has any children
-int haveChildren(trieNode* curr){
-	for (int i = 0; i < 26; i++)
-		if (curr->children[i])
-			return 1;	// child found
-	return 0;
-}
-*/
-
 
 // Helper function to print the word found
-void printWord(char* str, int n)
-{
-   printf("\n");
-   for(int i=0; i<n; i++)
-   {
-      printf("%c",str[i]);
-   }
+void printWord(char* word){
+    printf("\n");
+    for(int i = 0; i < strlen(word); i++)
+        printf("%c", word[i]);
 }
 
 // Print all words in Trie
-void printAllWords(trieNode* root, char* wordArray, int pos){
-    if(root == NULL)
+void printAllWordsOfTrie(NodeTrie* root, char* wordArray, int index){
+    if (root == NULL)
         return;
-
-    // If this character marks the end of a word in the trie, it means we have found the word in the grid. Add it to results.
-    if (root->endofword) {
-        wordArray[pos + 1] = '\0';
-        printWord(wordArray, pos);
-        root->endofword = false;
+    if (root->isEndOfWord) {
+        wordArray[index + 1] = '\0';
+        printWord(wordArray);
+        root->isEndOfWord = 0;
     }
-    for(int i=0; i<26; i++){
-        char current_char = i+'a';
-        trieNode* child = (trieNode*)get(root->children, current_char);
-
-        // Add current grid character to the word being formed
+    char current_char;
+    for (int i = 0; i < 26; i++){
+        current_char = i + 'a';
+        NodeTrie* child = (NodeTrie*)get(root->children, current_char);
         if (child != NULL){
-            wordArray[pos] = current_char;
-            printAllWords((trieNode*)get(root->children, current_char), wordArray, pos+1);
+            wordArray[index] = current_char;
+            printAllWordsOfTrie((NodeTrie*)get(root->children, current_char), wordArray, index + 1);
         }
     }
 }
 
-
-/*
-// Recursive function to delete a string from the trie
-int deleteWordFromTrie(trieNode **curr, char* str){
-    // Utilizamos um ponteiro duplo, pois precisamos definir a raiz quando a triade estiver vazia
-	// return if Trie is empty
-	if (*curr == NULL)
-		return 0;
-
-	// if we have not reached the end of the string
-	if (*str){
-		// recur for the node corresponding to next character in
-		// the string and if it returns 1, delete current node
-		// (if it is non-leaf)
-		if (*curr != NULL && (*curr)->child[*str - 'a'] != NULL &&
-			deleteWordFromTrie(&((*curr)->child[*str - 'a']), str + 1) &&
-			(*curr)->isEndOfWord == 0)
-		{
-			if (!haveChildren(*curr))
-			{
-				free(*curr);
-				(*curr) = NULL;
-				return 1;
-			}
-			else {
-				return 0;
-			}
-		}
-	}
-
-	// if we have reached the end of the string
-	if (*str == '\0' && (*curr)->isEndOfWord){
-		// if current node is a leaf node and don't have any children
-		if (!haveChildren(*curr)){
-			free(*curr); // delete current node
-			(*curr) = NULL;
-			return 1; // delete non-leaf parent nodes
-		}
-
-		// if current node is a leaf node and have children
-		else{
-			// mark current node as non-leaf node (DON'T DELETE IT)
-			(*curr)->isEndOfWord = 0;
-			return 0;	   // don't delete its parent nodes
-		}
-	}
-	return 0;
+// Function that verifies if a node has children or not. It returns 1 if it has; 0 if it does not
+int haveChildren(NodeTrie* root){
+    char current_char;
+    for (int i = 0; i < 26; i++){
+        current_char = i + 'a';
+        NodeTrie* possibleChild = (NodeTrie*)get(root->children, current_char);
+        if (possibleChild != NULL)
+            return 1;
+    }
+    return 0;   // If any of the alphabet letters is child of the node, we return 0 indicating it has not any child
 }
-*/
+
+// Recursive function to delete a string from the trie
+int deleteWordFromTrie(NodeTrie* root, char word[]){
+    int lastIndexBeforeEndOfWord = strlen(word);
+    int i = 0;
+    NodeTrie *curr = root;
+    while (word[i] != '\0'){    // We go through all the characters of the strings we want to store in the trie
+        NodeTrie *node = (NodeTrie*)get(curr->children, word[i]);   // We verify if the current node already has a child corresponding to the current letter we want to add
+        curr = node;
+        if(curr->isEndOfWord && i < strlen(word))
+            lastIndexBeforeEndOfWord = i;
+        i++;
+    }
+    i = 0;  // Reset the counting because this time we know where to stop
+    curr = root;
+    NodeTrie *aux;
+    while (word[i] != '\0'){    // We go through all the characters of the strings we want to store in the trie
+        aux = (NodeTrie*)get(curr->children, word[i]);   // We verify if the current node already has a child corresponding to the current letter we want to add
+        if (aux == NULL)
+            return 0;   // Treats error if we could not access the node
+        if(i > lastIndexBeforeEndOfWord)
+            free(curr);
+        curr = aux;
+        i++;
+    }
+    return 1;
+}
+

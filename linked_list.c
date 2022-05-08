@@ -3,81 +3,78 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Funcao que cria uma lista
-ListaEnc2Plus* criaLista() {
-    ListaEnc2Plus* lista = (ListaEnc2Plus*)malloc(sizeof(ListaEnc2Plus));
-    lista->prim = NULL;
-    lista->tamanho = 0;
-    return lista;
+// Function that creates a list
+LinkedList* createLinkedList() {
+    LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
+    list->head = NULL;
+    list->size = 0;
+    return list;
 }
 
-// Funcao que destroi uma lista
-void destroiLista(ListaEnc2Plus* lista) {
-    NodoLEnc2* aux = lista->prim;
+// Function that destroys a list
+void destroyLinkedList(LinkedList* linkedList){
+    NodeLinkedList* aux = linkedList->head;
     while (aux != NULL) {
-        NodoLEnc2* tmp = aux->prox;
-        free(aux); // Cuidar ordem do free
+        NodeLinkedList* tmp = aux->next;
+        free(aux);
         aux = tmp;
     }
-    free(lista);
+    free(linkedList);
 }
 
-// Funcao que imprime todos os nodos de uma lista
-void imprimeLista(ListaEnc2Plus* lista) {
-    NodoLEnc2* aux;
+// Function that prints all the nodes of a list
+void printLinkedList(LinkedList* linkedList){
+    NodeLinkedList* aux;
     printf("-----------------------------------------\n");
-    for (aux = lista->prim; aux != NULL; aux = aux->prox)
-        printf("(%s)\n", aux->palavra);
+    for (aux = linkedList->head; aux != NULL; aux = aux->next)
+        printf("(%s)\n", aux->word);
     printf("-----------------------------------------\n");
 }
 
-// Funcao que resgata um nodo com uma informacao de uma lista
-NodoLEnc2* buscaInfoLista(ListaEnc2Plus* lista, char* palavra) {
-    NodoLEnc2* aux;
-    for (aux = lista->prim; aux != NULL; aux = aux->prox)
-        if (strcmp(aux->palavra, palavra))
+// Function that inserts a node at the beginning of a list
+void insertStartLinkedList(LinkedList* linkedList, char* word){
+    NodeLinkedList* newNode = (NodeLinkedList*)malloc(sizeof(NodeLinkedList));
+    strcpy(newNode->word, word);
+    newNode->prev = NULL;
+    newNode->next = linkedList->head;
+    if (linkedList->head != NULL)
+        linkedList->head->prev = newNode;
+    linkedList->head = newNode;
+    linkedList->size += 1;
+}
+
+// Function that retrieves a node from a list based on the information it stores
+NodeLinkedList* findNodeLinkedList(LinkedList* linkedList, char* word){
+    NodeLinkedList* aux;
+    for (aux = linkedList->head; aux != NULL; aux = aux->next)
+        if (strcmp(aux->word, word))
             return aux;
     return NULL;
 }
 
-// Funcao que insere um nodo no inicio de uma lista
-void insereInicioLista(ListaEnc2Plus* lista, char* palavra) {
-    NodoLEnc2* novo = (NodoLEnc2*)malloc(sizeof(NodoLEnc2));
-    strcpy(novo->palavra, palavra);
-    novo->ant = NULL;
-    novo->prox = lista->prim;
-    if (lista->prim != NULL)
-        lista->prim->ant = novo;
-    lista->prim = novo;
-    lista->tamanho += 1;
+// Function that removes a node from a list based on the information it stores
+int removeNodeLinkedList(LinkedList* linkedList, char word[]){
+   NodeLinkedList *aux = linkedList->head;
+   while(aux != NULL && strcmp(aux->word, word))
+      aux = aux->next;
+   if (aux != NULL){
+      if (aux->prev == NULL){
+         linkedList->head = aux->next;
+         if (aux->next != NULL)
+            aux->next->prev = NULL;
+      }else{
+         aux->prev->next = aux->next;
+         if (aux->next != NULL)
+            aux->next->prev = aux->prev;
+      }
+      free(aux);
+      linkedList->size -= 1;
+      return 1;
+   }
+   return 0; // Node was not found
 }
 
-// Funcao que remove um nodo com uma informacao de uma lista
-int removeInfoLista(ListaEnc2Plus* lista, char* palavra) {
-    NodoLEnc2* aux = lista->prim;
-    while (aux != NULL && !(strcmp(aux->palavra, palavra))) {
-        aux = aux->prox;
-    }
-    if (aux != NULL) {
-        if (aux->ant == NULL) {
-            lista->prim = aux->prox;
-            if (aux->prox != NULL)
-                aux->prox->ant = NULL;
-        }
-        else {
-            aux->ant->prox = aux->prox;
-            if (aux->prox != NULL)
-                aux->prox->ant = aux->ant;
-        }
-        free(aux);
-        lista->tamanho -= 1;              // Removemos um elemento na lista, logo atualizamos o valor de tamanho
-        return 1;
-    }
-    return 0; // Nao encontrou
-}
-
-
-// Funcao que fornece o tamanho da lista, que é armazenado na variável "tamanho" da lista passada como argumento
-int tamanhoLista(ListaEnc2Plus* lista) {
-    return lista->tamanho;
+// Function that returns the size of a linked list
+int sizeLinkedList(LinkedList* linkedList) {
+    return linkedList->size;
 }

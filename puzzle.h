@@ -27,10 +27,7 @@ void populatePuzzleWithUserInput(Puzzle* puzzle);
 // Function that prints the 2D array that stores the puzzle
 void printPuzzle(Puzzle *puzzle);
 
-// Function that prints the list of words from the .txt dictionary that were found in the grid
-//void display_result(char** result, int return_size);
-
-// Function that destroy the 2D array which stores the puzzle
+// Function that destroys the matrix which stores the puzzle
 void destroyPuzzle(Puzzle* puzzle);
 
 #endif

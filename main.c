@@ -1,7 +1,7 @@
 /*
 Victor Da Camino
 Matrícula: 00275734
-09/04/2022
+08/05/2022
 
 Project description: X
 - X
@@ -21,23 +21,19 @@ Project description: X
 int main() {
 
     srand(time(NULL)); // Used when filling the matrix with random characters
-    int x = 0;
-    int opcao;
-    int gameChoice;
-    int retornoAux;
-    int nbRowsPuzzle;
-    int nbColumnsPuzzle;
-    char wordAux[50];   // Used to print all the words in the trie
-    int initialPositionWordStringAux = 0; // Used to print all the words in the trie
-    char identificadorAux;
+    int actionChoice, gameChoice, intAux, nbRowsPuzzle, nbColumnsPuzzle, wordsLeftTofind, intRemoveWord;
+    char wordAux[50];   // Used to print all the words in the trie and to delete a word from the trie
 
-    ListaEnc2Plus* result;
-    result = criaLista();
+    // Linked list in which we store the words that can be found in the puzzle
+    LinkedList* wordsFoundInThePuzzle;
+    wordsFoundInThePuzzle = createLinkedList();
 
+    // Puzzle that contains the 2D-array of chars
     Puzzle* puzzle;
     puzzle = createPuzzle();
 
-    trieNode* trie;
+    // Puzzle that contains all the words from the .txt file
+    NodeTrie* trie;
     trie = populateTrieFromDictionary();
 
     printf("------Word Search------\n");
@@ -57,8 +53,6 @@ int main() {
     printf("2. I create a word search puzzle and YOU solve it\n");
     scanf("%d", &gameChoice);
 
-    int row, col, numwords, returnsize;
-
     switch (gameChoice) {
         case 1:
             populatePuzzleWithUserInput(puzzle);
@@ -69,54 +63,73 @@ int main() {
             break;
     }
     printPuzzle(puzzle);
-    findwords(trie, puzzle, &returnsize, result);
-    int wordSLeftTofind = tamanhoLista(result);
+    solvePuzzle(trie, puzzle, wordsFoundInThePuzzle);
+    wordsLeftTofind  = sizeLinkedList(wordsFoundInThePuzzle);
 
     do{
-        printf("Words left to be found = %d\n", wordSLeftTofind);
-        printf("-----Opcoes-----\n");
+        printf("Words left to be found = %d\n", wordsLeftTofind);
+        printf("----- What do you want to do? -----\n");
         printf("1: Print words contained in the puzzle\n");
         printf("2: Verify if I got a word right\n");
         printf("3: Print all the words of the dictionary\n");
-        printf("4: END\n");
-        printf("Digite sua opcao: ");
-        scanf("%d", &opcao);
+        printf("4: Remove a word from the dictionary\n");
+        printf("5: QUIT\n");
+        printf("Select your choice: ");
+        scanf("%d", &actionChoice);
 
-      switch(opcao){
+      switch(actionChoice){
         case 1:
             printf("----------------------------------------------\n");
             printf("1: Print words contained in the puzzle\n");
-            imprimeLista(result);
+            printLinkedList(wordsFoundInThePuzzle);
             printf("----------------------------------------------\n");
             break;
 
         case 2:
             printf("----------------------------------------------\n");
-            printf("2: Remove nodo\n");
-            /*
-            printf("Digite o identificador do nodo a ser removido: ");
-            scanf(" %c", &identificadorAux);
-            retornoAux = removeInfoABP(arvoreBinariaDePesquisa, identificadorAux);
-            if (retornoAux == 1)
-                printf("Nodo removido com sucesso!\n");
+            printf("2: Verify if I got a word right\n");
+            printf("Type the word you want to check: ");
+            getchar();
+            fgets(wordAux, 50, stdin);
+            wordAux[strlen(wordAux)-1] = '\0';
+            intAux = removeNodeLinkedList(wordsFoundInThePuzzle, wordAux);
+            if (intAux)
+                printf("Yes, you have got it right!\n");
             else
-                printf("Erro ao remover o nodo da arvore!\n");
-            printf("----------------------------------------------\n");
-            */
+                printf("Sorry, this word is not in our dictionary :(\n");
+            wordsLeftTofind  = sizeLinkedList(wordsFoundInThePuzzle);
             break;
 
         case 3:
             printf("----------------------------------------------\n");
             printf("3: Print all the words of the dictionary\n");
-            printAllWords(trie, wordAux, initialPositionWordStringAux);
+            printAllWordsOfTrie(trie, wordAux, 0);
             printf("\n----------------------------------------------\n");
-        }
-    } while(opcao != 4);
+            break;
 
-    //display_result(result, returnsize);
+        case 4:
+            printf("----------------------------------------------\n");
+            printf("4: Remove a word from the dictionary\n");
+            printf("Type the word you want to delete: ");
+            getchar();
+            fgets(wordAux, 50, stdin);
+            wordAux[strlen(wordAux)-1] = '\0';
+            intAux = deleteWordFromTrie(trie, wordAux);
+            if (intAux){
+                printf("Word successfully removed from the trie!\n");
+                intRemoveWord = removeNodeLinkedList(wordsFoundInThePuzzle, wordAux);
+                wordsLeftTofind  = sizeLinkedList(wordsFoundInThePuzzle);
+            }
+            else
+                printf("Error when removing the word from the trie :(\n");
+            printf("\n----------------------------------------------\n");
+            break;
+        }
+
+    } while(actionChoice != 5);
 
     destroyPuzzle(puzzle);   // We shall free puzzle's memory since it was allocated dynamically
-    destroiLista(result);
+    destroyLinkedList(wordsFoundInThePuzzle);
 
     return 0;
 }
