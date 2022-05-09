@@ -33,7 +33,7 @@ void printAllWordsOfTrie(NodeTrie* root, char* wordArray, int index);
 // Function that verifies if a node has children or not. It returns 1 if it has; 0 if it does not
 int haveChildren(NodeTrie* root);
 
-// Recursive function to delete a string from the trie
-int deleteWordFromTrie(NodeTrie* root, char* word);
+// Function to delete a string from the trie
+int deleteWordFromTrie(NodeTrie* root, char word[]);
 
 #endif

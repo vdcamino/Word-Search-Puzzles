@@ -10,6 +10,7 @@ NodeTrie* createNodeTrie(char letter){
     node->letter = letter;
     node->children = createHashMap(26); // 26 because the English alphabet has 26 letters and we are dealing only with lowercase letters
     node->isEndOfWord = 0;
+    return node;
 }
 
 // Function that adds a given word to the trie
@@ -77,7 +78,7 @@ void printAllWordsOfTrie(NodeTrie* root, char* wordArray, int index){
     if (root == NULL)
         return;
     if (root->isEndOfWord) {
-        wordArray[index + 1] = '\0';
+        wordArray[index] = '\0';
         printWord(wordArray);
         root->isEndOfWord = 0;
     }
@@ -104,23 +105,23 @@ int haveChildren(NodeTrie* root){
     return 0;   // If any of the alphabet letters is child of the node, we return 0 indicating it has not any child
 }
 
-// Recursive function to delete a string from the trie
+// Function to delete a string from the trie
 int deleteWordFromTrie(NodeTrie* root, char word[]){
     int lastIndexBeforeEndOfWord = strlen(word);
     int i = 0;
     NodeTrie *curr = root;
-    while (word[i] != '\0'){    // We go through all the characters of the strings we want to store in the trie
-        NodeTrie *node = (NodeTrie*)get(curr->children, word[i]);   // We verify if the current node already has a child corresponding to the current letter we want to add
+    while (word[i] != '\0'){    // We go through all the characters of the strings we want to remove from the trie
+        NodeTrie *node = (NodeTrie*)get(curr->children, word[i]);   // We retrieve the child node
         curr = node;
         if(curr->isEndOfWord && i < strlen(word))
             lastIndexBeforeEndOfWord = i;
         i++;
     }
-    i = 0;  // Reset the counting because this time we know where to stop
+    i = 0;  // Reset the counting because this time we know where to stop in order to avoid deleting a word that's is in between our target
     curr = root;
     NodeTrie *aux;
-    while (word[i] != '\0'){    // We go through all the characters of the strings we want to store in the trie
-        aux = (NodeTrie*)get(curr->children, word[i]);   // We verify if the current node already has a child corresponding to the current letter we want to add
+    while (word[i] != '\0'){    // Re-do the same processes, but now we delete after reaching the index found above
+        aux = (NodeTrie*)get(curr->children, word[i]);
         if (aux == NULL)
             return 0;   // Treats error if we could not access the node
         if(i > lastIndexBeforeEndOfWord)
@@ -130,4 +131,3 @@ int deleteWordFromTrie(NodeTrie* root, char word[]){
     }
     return 1;
 }
-
