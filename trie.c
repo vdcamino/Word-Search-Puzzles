@@ -24,7 +24,7 @@ void addToTrie(NodeTrie* root, char word[]){
             add(curr->children, word[i], newNode);  // Add the new node as a child of the current node (it will then be accessible via the hash table)
             curr = newNode;
         } else
-            curr = node;    // If it already exists, we continue to explore this branch of the trie
+            curr = node;    // If it exists, we continue to explore this branch of the trie
         i++;
     }
     curr->isEndOfWord = 1;  // Once we have finished inserting all the nodes/letters of the word in the trie, we set a flag indicating that this last node is the end of a word
