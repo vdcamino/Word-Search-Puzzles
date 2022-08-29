@@ -1,5 +1,7 @@
 # Word Search Puzzles
 
+![](https://github.com/victordacamino/Word-Search-Puzzles/blob/master/demo.gif)
+
 This program aims to solve word search puzzles
 
 When running the code, the following workflow is executed:
