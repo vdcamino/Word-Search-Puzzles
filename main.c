@@ -1,30 +1,3 @@
-/*
-Members: Caio França and João Victor Deppermann
-Project: Word Search
-Main data structures and algorithms: Trie (a type of tree), Array-2D, doubly linked list and DFS
-
-Description:
-- The program aims to solve word search problems
-- Problems can be user-supplied or randomly generated with the help of rand() function
-
-When running the program, the following workflow is executed:
-
-1st step -> We create the structures that we will use
-2nd step -> We read a dictionary (around 10,000 words) through a .txt file and insert each word in the trie
-3rd step -> The dimensions of the wordsearch (from the char array) are requested from the user
-4th step -> Next, two options are offered to the user:
-    Option 1:
-        -> The user generates the word search, that is, fills the char array and the program solves the problem by printing the words it found in the array
-    Option 2:
-        -> The program generates the wordsearch, that is, it fills the char array with the rand() function and then checks which and how many words are in the wordsearch. If there is no dictionary word in the array, a new array is generated and the process repeats until we have at least 1 word to be found.
-        -> Once a word is found, we insert it into a doubly linked list.
-        -> At the end we print the word search and a count saying "Number of words to find = X" (it will be the number of elements of the doubly linked list)
-        -> User has 2 options:
-            2.1 -> "Check found word" which checks if the word it found is in the linked list
-            2.2 -> "Solve the word search for me" which prints the doubly linked list indicating eventually (depending on the time we have) the coordinates of the initial letter of each word (row ... column ... of the matrix)
-5th step -> Destroy the dynamically allocated structures
-*/
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
