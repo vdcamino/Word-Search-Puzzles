@@ -7,7 +7,7 @@ This program aims to solve word search puzzles
 When running the code, the following workflow is executed:
 
 * 1st step -> First, we create the structures that we will use
-* 2nd step -> Next, We read a dictionary (around 10,000 words) through a .txt file and insert each word in the trie
+* 2nd step -> Next, we read a dictionary (around 10,000 words) through a .txt file and insert each word in the trie
 * 3rd step -> Then the dimensions of the puzzle (the char array) are asked to the user
 * 4th step -> Finally, two options are offered to the user:
   * Option 1:
